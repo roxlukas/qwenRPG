@@ -307,7 +307,7 @@ function setPlayerStart(){ player.x=COLS>>1; player.y=ROWS>>1; }
 function attack(e){
   const dmg=Math.max(1, player.atk+ri(0,3));
   e.hp-=dmg;
-  floatText(e.x,e.y,'−'+dmg,'#ff0000');
+  floatText(e.x,e.y,'−'+dmg,'#ff3333');
   if(e.hp<=0){ e.alive=false; const c=ri(0,4)+depth; if(c>0){ coins+=c; log(e.name+' pada! +'+e.xp+' XP, +'+c+' monet.','g'); } else { log(e.name+' pada! +'+e.xp+' XP.','g'); } gainXp(e.xp); }
   else log('Uderzasz: '+e.name+' (−'+dmg+').','n');
   endTurn();
@@ -364,7 +364,7 @@ function canOccupy(e,x,y){
 function damagePlayer(e){
   const dmg=Math.max(1, e.atk-1+ri(0,1));
   player.hp-=dmg; shake=5;
-  floatText(player.x,player.y,'−'+dmg,'#ff0000');
+  floatText(player.x,player.y,'−'+dmg,'#ff3333');
   log(e.name+' atakuje. (−'+dmg+' HP)','t');
   if(player.hp<=0){ player.hp=0; gameOver(); }
 }
