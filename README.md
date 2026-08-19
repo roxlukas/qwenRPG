@@ -162,3 +162,5 @@ The model did exactly what I asked for.
 ## Licence
 
 Prompt, generated game and the Qwen3.8-27B weights are all released under Apache 2.0.
+
+Model weights are at https://ollama.com/library/qwen3.8:27b
