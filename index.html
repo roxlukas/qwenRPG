@@ -283,7 +283,7 @@ function tryMove(dx,dy){
   const t=map[ny][nx];
   if(t==='wall' || t==='water') return;
   if(t==='door'){
-    if(keys>0){ const c=ri(3,20)+depth; keys--; map[ny][nx]='floor'; coins+=c; if(c===20+depth) log('Otwierasz drzwi! ✨ CRITICAL: +'+c+' monet!','g'); else log('Otwierasz drzwi (−1 klucza). +'+c+' monet.','p'); }
+    if(keys>0){ const c=ri(3,20)+depth; keys--; map[ny][nx]='floor'; coins+=c; floatText(nx,ny,'+'+c+'🪙','#ffd700'); if(c===20+depth) log('Otwierasz drzwi! ✨ CRITICAL: +'+c+' monet!','g'); else log('Otwierasz drzwi (−1 klucza). +'+c+' monet.','p'); }
     else { log('Zamknięte — potrzebujesz klucza.','t'); endTurn(); return; }
   }
   player.x=nx; player.y=ny;
@@ -308,7 +308,7 @@ function attack(e){
   const dmg=Math.max(1, player.atk+ri(0,3));
   e.hp-=dmg;
   floatText(e.x,e.y,'−'+dmg,'#ff3333');
-  if(e.hp<=0){ e.alive=false; const c=ri(0,4)+depth; if(c>0){ coins+=c; log(e.name+' pada! +'+e.xp+' XP, +'+c+' monet.','g'); } else { log(e.name+' pada! +'+e.xp+' XP.','g'); } gainXp(e.xp); }
+  if(e.hp<=0){ e.alive=false; const c=ri(0,4)+depth; if(c>0){ coins+=c; floatText(e.x,e.y,'+'+c+'🪙','#ffd700'); log(e.name+' pada! +'+e.xp+' XP, +'+c+' monet.','g'); } else { log(e.name+' pada! +'+e.xp+' XP.','g'); } gainXp(e.xp); }
   else log('Uderzasz: '+e.name+' (−'+dmg+').','n');
   endTurn();
 }
