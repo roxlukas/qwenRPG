@@ -161,5 +161,4 @@ The model did exactly what I asked for.
 
 ## Licence
 
-The Qwen3.8-27B weights are released under Apache 2.0. That does not extend to the generated
-code - the contents of this repository are covered by [fill in your chosen licence].
+Prompt, generated game and the Qwen3.8-27B weights are all released under Apache 2.0.
