@@ -1,4 +1,4 @@
-\# qwenRPG - a roguelike written entirely by a local model
+# qwenRPG - a roguelike written entirely by a local model
 
 
 
@@ -20,25 +20,25 @@ result itself.
 
 
 
-\## TL;DR
+## TL;DR
 
 
 
-\- The game is a single HTML file with zero external dependencies. All graphics are drawn
+- The game is a single HTML file with zero external dependencies. All graphics are drawn
 
 &#x20; from code: no image files, no libraries.
 
-\- The code was written by `qwen3.8:27b` at Q4\_K\_M quantization, locally, on an RTX 3090.
+- The code was written by `qwen3.8:27b` at Q4_K_M quantization, locally, on an RTX 3090.
 
-\- Harness: Qwen Code. Cline was tested but did not work out (see the token limit section).
+- Harness: Qwen Code. Cline was tested but did not work out (see the token limit section).
 
-\- The only thing I fixed by hand was gameplay balance. Everything else came out of the
+- The only thing I fixed by hand was gameplay balance. Everything else came out of the
 
 &#x20; prompt and the agent's own iterations.
 
 
 
-\## Setup
+## Setup
 
 
 
@@ -46,7 +46,7 @@ result itself.
 
 |---|---|
 
-| model | `qwen3.8:27b`, Q4\_K\_M, 27.3B parameters |
+| model | `qwen3.8:27b`, Q4_K_M, 27.3B parameters |
 
 | runtime | Ollama (requires 0.32.12+) |
 
@@ -54,9 +54,9 @@ result itself.
 
 | GPU | RTX 3090, 24 GB |
 
-| throughput | \~50 tok/s during generation |
+| throughput | ~50 tok/s during generation |
 
-| power draw | \~328 W under load |
+| power draw | ~328 W under load |
 
 | temperatures | core 74°C, hot spot 90°C, memory 86°C |
 
@@ -68,7 +68,7 @@ full attention, the rest are linear attention. In practice this means context le
 
 not hurt throughput the way it does in a classic transformer. The model also ships with a
 
-built-in multi-token prediction head, which combined with `draft\_num\_predict 4` in Ollama's
+built-in multi-token prediction head, which combined with `draft_num_predict 4` in Ollama's
 
 default parameters probably explains why 50 tok/s lands above the theoretical ceiling
 
@@ -76,7 +76,7 @@ implied by memory bandwidth alone.
 
 
 
-\## The prompt
+## The prompt
 
 
 
@@ -84,7 +84,7 @@ Full text in `prompt.md`. The design decisions that mattered:
 
 
 
-\*\*Sprites as 12x12 character masks.\*\* Graphics are generated from string arrays where `.`
+**Sprites as 12x12 character masks.** Graphics are generated from string arrays where `.`
 
 means transparent and other characters map to a palette. I deliberately dropped from 16x16
 
@@ -96,7 +96,7 @@ crashing the renderer.
 
 
 
-\*\*A fixed hex palette.\*\* Instead of describing "cold night colours", a concrete list of
+**A fixed hex palette.** Instead of describing "cold night colours", a concrete list of
 
 named values. The model drifted from it anyway (see known issues), but it would have been
 
@@ -104,13 +104,13 @@ worse without.
 
 
 
-\*\*A self-check list at the end.\*\* Nine items to verify after writing the file. The model
+**A self-check list at the end.** Nine items to verify after writing the file. The model
 
 expanded this on its own into a seven-step manual test plan I never asked for.
 
 
 
-\## The token limit problem
+## The token limit problem
 
 
 
@@ -118,7 +118,7 @@ This is the actual substance of the experiment and the reason I am writing it up
 
 
 
-The first attempt in \*\*Cline\*\* cut off mid-reasoning at exactly 8192 tokens. A round power
+The first attempt in **Cline** cut off mid-reasoning at exactly 8192 tokens. A round power
 
 of two is an unmistakable signature - no model stops generating there of its own accord.
 
@@ -128,7 +128,7 @@ This was a client-side limit, not the model and not the context window (which I 
 
 
 
-The cause is structural: Cline creates a new file through a single `write\_to\_file` call,
+The cause is structural: Cline creates a new file through a single `write_to_file` call,
 
 meaning the entire contents must fit in one response. With thinking mode enabled, which can
 
@@ -136,7 +136,7 @@ eat 5-6 thousand tokens, there is not much budget left for code.
 
 
 
-\*\*Qwen Code\*\* did better because it splits work across turns and each turn gets a fresh
+**Qwen Code** did better because it splits work across turns and each turn gets a fresh
 
 budget. But on the chunk containing FOV, BFS pathfinding and enemy AI it hit the ceiling
 
@@ -148,13 +148,13 @@ automatic limit escalation running into its own cap.
 
 
 
-\### The fix
+### The fix
 
 
 
-The key is `samplingParams.max\_tokens`, but it has to live \*\*inside the model entry under
+The key is `samplingParams.max_tokens`, but it has to live **inside the model entry under
 
-`modelProviders`\*\*, not at the `model` level. Placed wrong, it is silently ignored (Qwen Code
+`modelProviders`**, not at the `model` level. Placed wrong, it is silently ignored (Qwen Code
 
 does at least warn about this at startup).
 
@@ -164,19 +164,19 @@ does at least warn about this at startup).
 
 {
 
-&#x20; "env": { "OLLAMA\_API\_KEY": "ollama" },
+&#x20; "env": { "OLLAMA_API_KEY": "ollama" },
 
 &#x20; "model": { "name": "qwen3.8:27b" },
 
 &#x20; "modelProviders": {
 
-&#x20;   "openai": \[
+&#x20;   "openai": [
 
 &#x20;     {
 
 &#x20;       "baseUrl": "http://127.0.0.1:11434/v1",
 
-&#x20;       "envKey": "OLLAMA\_API\_KEY",
+&#x20;       "envKey": "OLLAMA_API_KEY",
 
 &#x20;       "id": "qwen3.8:27b",
 
@@ -186,7 +186,7 @@ does at least warn about this at startup).
 
 &#x20;         "contextWindowSize": 262144,
 
-&#x20;         "samplingParams": { "max\_tokens": 32000 }
+&#x20;         "samplingParams": { "max_tokens": 32000 }
 
 &#x20;       }
 
@@ -216,7 +216,7 @@ does at least warn about this at startup).
 
 
 
-Note: setting an explicit limit \*\*disables automatic escalation\*\*, so pick a generous value
+Note: setting an explicit limit **disables automatic escalation**, so pick a generous value
 
 rather than a tight one.
 
@@ -224,13 +224,13 @@ rather than a tight one.
 
 Second note: do not touch `temperature`. With thinking mode enabled, moving toward greedy
 
-decoding triggers repetition loops. The defaults of 1.0 / top\_p 0.95 / top\_k 20 are chosen
+decoding triggers repetition loops. The defaults of 1.0 / top_p 0.95 / top_k 20 are chosen
 
 deliberately.
 
 
 
-\## What the model did, and what I did
+## What the model did, and what I did
 
 
 
@@ -242,7 +242,7 @@ turn-based combat system, every sprite, the HUD and the event log.
 
 
 
-I fixed the \*\*balance\*\* and extended the game with additional systems (XP, character levels,
+I fixed the **balance** and extended the game with additional systems (XP, character levels,
 
 keys, herbs). The balance from the prompt was indefensible: enemies had stats comparable to
 
@@ -254,7 +254,7 @@ a flaw in my specification, not in the execution.
 
 
 
-\## Known flaws in the prompt
+## Known flaws in the prompt
 
 
 
@@ -262,13 +262,13 @@ I am leaving these in `prompt.md` unfixed, because they are part of the story:
 
 
 
-1\. `temperature: 0.25` - the wrong value for a model with thinking mode.
+1. `temperature: 0.25` - the wrong value for a model with thinking mode.
 
-2\. The balance table does not account for fighting multiple enemies at once. It needs a cap
+2. The balance table does not account for fighting multiple enemies at once. It needs a cap
 
 &#x20;  on how many enemies can be adjacent to the player simultaneously.
 
-3\. Balance values are scattered through the specification instead of sitting in a single
+3. Balance values are scattered through the specification instead of sitting in a single
 
 &#x20;  `BALANCE` object at the top of the file. That turns balance iteration into a hunt for
 
@@ -276,7 +276,7 @@ I am leaving these in `prompt.md` unfixed, because they are part of the story:
 
 
 
-\## Takeaways
+## Takeaways
 
 
 
@@ -304,11 +304,11 @@ The model did exactly what I asked for.
 
 
 
-\## Licence
+## Licence
 
 
 
 The Qwen3.8-27B weights are released under Apache 2.0. That does not extend to the generated
 
-code - the contents of this repository are covered by \[fill in your chosen licence].
+code - the contents of this repository are covered by [fill in your chosen licence].
 
